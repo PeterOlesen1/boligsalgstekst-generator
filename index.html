@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Boligsalgstekst Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    async function generateListingText() {
+      const plotSize = document.getElementById("plot-size").value;
+      const houseSize = document.getElementById("house-size").value;
+      const numFloors = document.getElementById("num-floors").value;
+      const location = document.getElementById("location").value;
+      const buildYear = document.getElementById("build-year").value;
+      const renovations = document.getElementById("renovations").value;
+
+      const prompt = `Boligsalgstekst:\nGrundstørrelse: ${plotSize} kvadratmeter\nBoligstørrelse: ${houseSize} kvadratmeter\nAntal planer: ${numFloors}\nBeliggenhed: ${location}\nByggeår: ${buildYear}\nRenoveringer: ${renovations}\n`;
+
+      const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+        prompt: prompt,
+        max_tokens: 100,
+        temperature: 0.7
+      }, {
+        headers: {
+          'Authorization': 'Bearer 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',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const generatedText = response.data.choices[0].text.trim();
+      document.getElementById("generated-text").innerText = generatedText;
+    }
+  </script>
+</head>
+<body>
+  <h1>Boligsalgstekst Generator</h1>
+  
+  <label for="plot-size">Grundstørrelse (kvadratmeter):</label>
+  <input type="text" id="plot-size"><br><br>
+
+  <label for="house-size">Boligstørrelse (kvadratmeter):</label>
+  <input type="text" id="house-size"><br><br>
+
+  <label for="num-floors">Antal planer:</label>
+  <input type="text" id="num-floors"><br><br>
+
+  <label for="location">Beliggenhed:</label>
+  <input type="text" id="location"><br><br>
+
+  <label for="build-year">Byggeår:</label>
+  <input type="text" id="build-year"><br><br>
+
+  <label for="renovations">Renoveringer:</label>
+  <input type="text" id="renovations"><br><br>
+
+  <button onclick="generateListingText()">Generer boligsalgstekst</button><br><br>
+
+  <h2>Genereret boligsalgstekst:</h2>
+  <div id="generated-text"></div>
+</body>
+</html>
